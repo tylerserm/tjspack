@@ -1,9 +1,11 @@
-#' Title
+#' @title My Hello World Function
 #'
-#' @param df
-#' @param testdate
-#' @param DOB
-#' @param Age
+#' @description
+#'
+#' @param df the dataframe you would like applied to this function
+#' @param testdate the date the sample was collected
+#' @param DOB the patients date of birth
+#' @param Age the patients age
 #'
 #' @returns
 #' @export
@@ -11,11 +13,11 @@
 #' @examples
 check_age <- function(df, testdate, DOB, Age) {
   # Ensure the columns are in Date format
-  df$Lead.Specimen.RecordedDate <- as.Date(df$Lead.Specimen.RecordedDate)
-  df$Birthday <- as.Date(df$Birthday)
+  df$testdate <- as.Date(df$testdate)
+  df$DOB <- as.Date(df$DOB)
 
   # Calculate the expected age based on the difference between the dates
-  df$calculated_age <- round(as.numeric(difftime(df$Lead.Specimen.RecordedDate, df$Birthday, units = "weeks")) / 52.25, 2)
+  df$calculated_age <- round(as.numeric(difftime(df$testdate, df$DOB, units = "weeks")) / 52.25, 2)
 
   # Check if the calculated age matches the provided age
   df$age_check <- abs(df$calculated_age - df$Age) < 0.01
@@ -27,10 +29,10 @@ check_age <- function(df, testdate, DOB, Age) {
 
     if (nrow(correct_rows) > 0) {
       # Replace the incorrect Birthday with the correct one (from the first row found)
-      df$Birthday[i] <- correct_rows$Birthday[1]
+      df$DOB[i] <- correct_rows$DOB[1]
 
       # Recalculate the age based on the corrected Birthday
-      df$calculated_age[i] <- as.numeric(difftime(df$Lead.Specimen.RecordedDate[i], df$Birthday[i], units = "weeks")) / 52.25
+      df$calculated_age[i] <- as.numeric(difftime(df$testdate[i], df$DOB[i], units = "weeks")) / 52.25
       df$Age[i] <- round(df$calculated_age[i], 2)
       df$age_check[i] <- TRUE  # Mark this row as having a correct age now
     }

@@ -15,7 +15,7 @@
 
 #' @title My Hello World Function
 #'
-#'@description Prints 'Hello, thank you for using my package!'
+#' @description Prints 'Hello, thank you for using my package!'
 #'
 #' @param x The name of the person to say hi to
 #'
