@@ -15,19 +15,21 @@ knitr::opts_chunk$set(
 )
 ```
 
-The tjspack package is largely focused on data cleaning within longitudinal datasets. In such datasets when there are sometimes months
-or even years between subject visits a concern is always demographic or subject identifier data being entered incorrectly, or
+The tjspack package is largely focused on data cleaning within longitudinal datasets. In such datasets when there are sometimes
+months or even years between subject visits a concern is always demographic or subject identifier data being entered incorrectly, or
 inadvertently changing over time. By using tjspack, you will be able to quickly assuage such fears. The functions in this package are
 geared towards identifying and correcting data entry errors that may occur overtime. My functions exclusively fix the errors they
-identify, so if you would rather merely have mistakes flagged to be manually investigated you will need to alter the functions so that
-they output a new dataset including only a shortlist of the errors found.
+identify, so if you would rather merely have mistakes flagged to be manually investigated you will need to alter the functions so
+that they output a new dataset including only a shortlist of the errors found.
 
 
 First, I will detail how to use the check_age function. This function was created with the intended purpose of checking that human
 entered age values are accurate given a subject visit date and birthday. For example this function would correct any age values that
 do not match with the given DOB and visit date for that entry and  corrects any date of births that were entered incorrectly.
 
-The required inputs for the function are: your dataframe, the column name containing the subject identifier, the column name containing the test date (or a visit date, used to compare to the DOB to calculate the expected age), the column name containing subject's date
+The required inputs for the function are: your dataframe, the column name containing the subject identifier, the column name
+containing the test date (or a visit date, used to compare to the DOB to calculate the expected age), the column name containing
+subject's date
 of birth, and the column name containing subject's age (which we will be checking with this function).
 ```{r setup}
 library(devtools)
@@ -48,10 +50,10 @@ Notice how for observation 3 in df example1 the age is labeled as 8.83 despite t
 function corrects this.
 
 
-Next I will detail the check_visit_order function. This function was created to ensure that visits are numbered correctly based on the
-entered visit or test date. For example the a date provided for 'Visit 1' comes after 'Visit 4' this function will fix the misnumbered
-visit numbers. Additionally this code ensures that visit numbers are not repeated, unless the visit dates are identical and ensures
-that no visit number is missing from the visit number sequence for a given subject.
+Next I will detail the check_visit_order function. This function was created to ensure that visits are numbered correctly based on
+the entered visit or test date. For example the date provided for 'Visit 1' comes after 'Visit 4' this function will fix the
+misnumbered visit numbers. Additionally this code ensures that visit numbers are not repeated, unless the visit dates are identical
+and ensures that no visit number is missing from the visit number sequence for a given subject.
 
 The required inputs for the function are: your dataframe, the column name containing the subject identifier, the column name
 containing the test date (or visit date, used to order the visit numbers), and the column name containing the visit numbers (Which we
@@ -66,17 +68,19 @@ check_visit_order(example2, "ID", "TestDate", "visit_num")
 
 example2
 ```
-Notice how for observation 2 in df example2 the the visit that occurred in February is listed as visit 3, while observation 3 the
-visit that occured in April is listed as visit 3. The function corrects the order based on the test dates.
+Notice how for observation 2 in df example2 the the visit that occurred in February is listed as visit 3, while observation 3, the
+visit that occurred in April, is listed as visit 2 when in reality those numbers should be switched. The function corrects the order
+based on the test dates.
 
 
-Lastly I will display the update_stage function. This function was created to update cases status to confirmatory based on certain
+Lastly I will display the update_stage function. This function was created to update case status to confirmatory based on certain
 test result criteria. This function is really only applicable to medical conditions that need to be confirmed via testing or those
-that have variable conditions to considered confirmed. For examplem for a person to be considered as having a confirmed elevated blood
-lead level they either need an initial capillary blood draw test result that is above the action threshold AND a second result of any
-type also the threshold, or just one venous blood draw over the threshold. For a medical condition like lead poisoning, you cannot
-strictly classify every patients second result as confirming that case. This function applies some conditional logic to lead testing
-concerning whether a test is considered confirmatory or not back on test type, test result value, and previous case status.
+that have variable conditions to be considered confirmed. For example for a person to be considered as having a confirmed elevated
+blood lead level they either need an initial capillary blood draw test result that is above the action threshold AND a second result
+of any type also above the threshold, or just one venous blood draw over the threshold. For a medical condition like lead poisoning,
+you cannot strictly classify every patients second result as confirming that case. This function applies some conditional logic to
+lead testing concerning whether a test is considered confirmatory or not back on test type, test result value, and previous case
+status.
 
 The required inputs for the function are: your dataframe, the column name containing the visit number, the column name containing the
 case status, and the column name containing the test type.
@@ -97,8 +101,8 @@ this should actually be considered a confirmatory result. The function corrects 
 
 Going forward this package could be expanded to include simpler functions that could flag subjects whose demographic information like
 race, gender, or sex or even survey questions like medical history change in unexpected ways. Other ways to safeguard longitudinal
-datasets from data entry errors. I have a lot of experience in lead poisoning surveillance, which as a chronic medical condition has a
-lot of similarities to a longitudinal dataset when you are talking about tracking patients suffering from lead poisoning. In lead
+datasets from data entry errors. I have a lot of experience in lead poisoning surveillance, which as a chronic medical condition has
+a lot of similarities to a longitudinal dataset when you are talking about tracking patients suffering from lead poisoning. In lead
 poisoning surveillance there are several case management milestones that need to happen for every confirmed case, namely an
 educational
 
@@ -106,13 +110,11 @@ visit and a risk assessment to discover and then mitigate the hazard. I have an 
 that are yet to achieve these actions in a reasonable window after becoming confirmed, perhaps 180 days. It would be a way to quickly
 ensure patients that are perhaps on the road to becoming lost or are part of a backlog as not completely forgotten about. It would be
 quite simple, something along the lines of if system date is greater than 180 days after the confirmatory test date then output that
-subject. Staying with the lead exposure example, there could be another function that details the level after the risk assessment on a
-graph. Ideally it would show the levels decreasing after the hazards were identified and removed during the risk assessment. There
-also
-could be a function to highlight patients whose recent test results have dropped under the treshold and are perhaps appropriate to
-confirm former cases. Since lead lingers so long in the body, the retest schedule can be a year between tests, this can make it
+subject. Staying with the lead exposure example, there could be another function that details the level after the risk assessment on
+a graph. Ideally it would show the levels decreasing after the hazards were identified and removed during the risk assessment. There
+also could be a function to highlight patients whose recent test results have dropped under the treshold and are perhaps appropriate
+to confirm former cases. Since lead lingers so long in the body, the retest schedule can be a year between tests, this can make it
 difficult to associate new results with years old data that subject previously generated. A function that immediately either charted
-or
-displayed the test result history in a table would be very useful in maintaining patient records and identifying who still needs
+or displayed the test result history in a table would be very useful in maintaining patient records and identifying who still needs
 resoucres and help. There are many potential avenues to take this package to further improve the benefit it could provide to people
 looking to safeguard their longitudinal datasets.
