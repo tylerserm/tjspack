@@ -18,7 +18,7 @@
 #' TestDate = as.Date(c("2023-01-01", "2023-02-01", "2023-04-01", "2023-02-01", "2023-02-01")),
 #' visit_num = c(1, 3, 2, 1, 2)
 #' check_Age(example, "ID", "TestDate", "DOB", "Age")
-#' #Notice now, the incorrect visit numbers have been corrected
+#' #Notice now, the incorrect visit order numbers have been corrected
 #' example
 check_visit_order <- function(df, Subj_ID, testdate, visit_num) {
   df <- df[order(df[[Subj_ID]], df[[testdate]]), ]
