@@ -15,10 +15,10 @@
 #' This example dataset has an incorrectly entered case status of initial despite a venous blood draw, which automatically confirms the case.
 #' example <- data.frame(
 #' ID = c(1, 1, 1, 2, 2),
-#' visit_num = c(1, 3, 2, 1, 2)
-#' Case_Status = c( "Initial", "Confirmatory", "Most_Recent", "Initial", "Most_Recent")
-#' Test_Type = c( "Capillary", "Capillary", "Venous" , "Venous", "Capillary")
-#' check_Age(example, "ID",)
+#' visit_num = c(1, 3, 2, 1, 2),
+#' Case_Status = c( "Initial", "Confirmatory", "Most_Recent", "Initial", "Most_Recent"),
+#' Test_Type = c( "Capillary", "Capillary", "Venous" , "Venous", "Capillary"))
+#' update_stage(example, "ID", "visit_num", "Case_Status", "Test_Type")
 #' #Notice now, the incorrect case status has been corrected
 #' example
 update_stage <- function(df, Subj_ID, visit_num, Case_Status, Test_Type) {

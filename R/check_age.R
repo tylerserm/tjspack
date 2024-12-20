@@ -19,11 +19,9 @@
 #' TestDate = as.Date(c("2023-01-01", "2023-01-01", "2023-04-01", "2023-02-01", "2023-02-01")),
 #' DOB = as.Date(c("2017-06-01", "2017-06-01", "2017-06-01", "2017-12-14", "2017-12-14")),
 #' Age = c(5.58, 5.58, 8.83, 5.05, 5.05)
-#' check_Age(example, "ID", "TestDate", "DOB", "Age")
+#' check_age(example, "ID", "TestDate", "DOB", "Age")
 #' #Notice now, this incorrect age has been corrected
 #' example
-Example_Dataset<-read.csv("C:/Users/tyler/Downloads/examplespreadsheet.csv")
-
 check_age <- function(df, Subj_ID, testdate, DOB, Age) {
   df[[testdate]] <- as.Date(df[[testdate]], format = "%m/%d/%Y")
   df[[DOB]] <- as.Date(df[[DOB]], format = "%m/%d/%Y")

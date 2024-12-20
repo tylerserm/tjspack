@@ -15,6 +15,53 @@ knitr::opts_chunk$set(
 )
 ```
 
+The tjspack package is largely focused on data cleaning within longitudinal datasets. In such datasets when there are sometimes months or even years between subject visits a concern is always demographic or subject identifier data being entered incorrectly, or inadvertently changing over time. By using tjspack, you will be able to quickly assuage such fears.The functions in this package are geared towards identifying and correcting any data entry errors that may occur overtime. My functions exclusively fix the errors they identify, so if you would rather merely have mistakes flagged to be manually investigated you will need to alter the functions so that they output a new dataset including only a shortlist of the errors found.
+
+
+First, I will detail how to use the check_age function. This function was created with the intended purpose of checking that and entered age values that increase as the subject progresses through the study are progressing correctly. For example if your subjects are enrolled in the study at age 10 and have 'Visit 2' five years later. This function would correct any age values that we outside of that expected age increase, a misentered 25 instead of 15 for 'Visit 2'.
+
+The required inputs for the function are: your dataframe, a subject identifier, a test date (or a visit date, used to compare to the DOB to calculate the expected age), the subject's date of birth, and the subject's inputed age (which we will be checking with this function).
 ```{r setup}
 library(tjspack)
+
+example1 <- data.frame(
+ID = c(1, 1, 1, 2, 2),
+TestDate = as.Date(c("2023-01-01", "2023-01-01", "2023-04-01", "2023-02-01", "2023-02-01")),
+DOB = as.Date(c("2017-06-01", "2017-06-01", "2017-06-01", "2017-12-14", "2017-12-14")),
+Age = c(5.58, 5.58, 8.83, 5.05, 5.05))
+
+check_age(example, "ID", "TestDate", "DOB", "Age")
+
+example1
 ```
+
+Next I will detail the check_visit_order function. This function was created to ensure that visits are numbered correctly based on the entered visit or test date. For example if chronologically your 'Visit 1' should actually be 'Visit 4' this function will find and correct that.
+
+The required inputs for the function are: your dataframe, a subject identifier, a test date (or visit date, used to order the visit numbers), and the visit numbers (Which we will be checking using this function)
+```{r}
+example2 <- data.frame(
+ID = c(1, 1, 1, 2, 2),
+TestDate = as.Date(c("2023-01-01", "2023-02-01", "2023-04-01", "2023-02-01", "2023-02-01")),
+visit_num = c(1, 3, 2, 1, 2))
+
+check_visit_order(example, "ID", "TestDate", "DOB", "Age")
+
+example2
+```
+
+Lastly I will display the update_stage function. This function was created to update cases status to confirmatory based on certain test result criteria. This function is really only applicable to medical conditions that need to be confirmed via testing or those that have variable conditions to considered confirmed. For example. For a person to be considered as having a confirmed elevated blood lead level they either need an initial capillary blood draw test result that is above the action threshold AND a second result of any type also the threshold, or just one venous blood draw over the threshold. For a medical condition like lead poisoning, you cannot strictly classify every patients second result as confirming that case. There is some logic that needs to be built in, this function will check for that logic and ensure your dataset follows it.
+
+The required inputs for the function are: your dataframe, the visit number, the case status, and the test type.
+```{r}
+example3 <- data.frame(
+ID = c(1, 1, 1, 2, 2),
+visit_num = c(1, 3, 2, 1, 2),
+Case_Status = c( "Initial", "Confirmatory", "Most_Recent", "Initial", "Most_Recent"),
+Test_Type = c( "Capillary", "Capillary", "Venous" , "Venous", "Capillary"))
+
+update_stage(example, "ID", "visit_num", "Case_Status", "Test_Type")
+
+example3
+```
+
+Going forward this package could be expanded to include simpler functions that could flag subjects whose demographic information like race, gender, or sex or even survey questions like medical history change in unexpected ways. Other ways to safeguard longitudinal datasets from data entry errors. I have a lot of experience in lead poisoning surveillance, and in that 
