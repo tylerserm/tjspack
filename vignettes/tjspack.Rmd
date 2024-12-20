@@ -2,6 +2,7 @@
 title: "tjspack Vignette"
 author: "Tyler Sermersheim"
 output: rmarkdown::html_vignette
+  pdf_document:
 vignette: >
   %\VignetteIndexEntry{Cleaning Longitudinal Data with tjspack}
   %\VignetteEngine{knitr::rmarkdown}
@@ -22,6 +23,13 @@ geared towards identifying and correcting data entry errors that may occur overt
 identify, so if you would rather merely have mistakes flagged to be manually investigated you will need to alter the functions so
 that they output a new dataset including only a shortlist of the errors found.
 
+To install my package, you will need to use the function install_github and the arguments "tylerserm/tjspack". Alternatively
+you can find it here to manually download: https://github.com/tylerserm/tjspack
+```{r}
+library(devtools)
+install_github("tylerserm/tjspack")
+library(tjspack)
+```
 
 First, I will detail how to use the check_age function. This function was created with the intended purpose of checking that human
 entered age values are accurate given a subject visit date and birthday. For example this function would correct any age values that
@@ -32,10 +40,6 @@ containing the test date (or a visit date, used to compare to the DOB to calcula
 subject's date
 of birth, and the column name containing subject's age (which we will be checking with this function).
 ```{r setup}
-library(devtools)
-install_github("tylerserm/tjspack")
-library(tjspack)
-
 example1 <- data.frame(
 ID = c(1, 1, 1, 2, 2),
 TestDate = as.Date(c("2023-01-01", "2023-01-01", "2023-04-01", "2023-02-01", "2023-02-01")),
