@@ -21,14 +21,16 @@
 #' #Notice now, the incorrect visit order numbers have been corrected
 #' example
 check_visit_order <- function(df, Subj_ID, testdate, visit_num) {
+  df[[testdate]] <- as.Date(df[[testdate]], format = "%m/%d/%Y")
   df <- df[order(df[[Subj_ID]], df[[testdate]]), ]
+
   for (subject_id in unique(df[[Subj_ID]])) {
     subject_data <- df[df[[Subj_ID]] == subject_id, ]
 
     for (i in 1:nrow(subject_data)) {
-      if(i == 1 && subject_data[[visit_num]][i] != 1){
-        df[[visit_num]][which(rownames(df) == rownames(subject_data)[i])] = 1
-        subject_data[[visit_num]][i] = 1
+      if (subject_data[[testdate]][i] == subject_data[[testdate]][1]){
+        df[[visit_num]][which(df[[Subj_ID]] == subject_id & df[[testdate]] == subject_data[[testdate]][i] )] <- 1
+        subject_data[[visit_num]][i] <- 1
       }
       if (subject_data[[visit_num]][i] %in% subject_data[[visit_num]][c(1:(i-1), (i+1):nrow(subject_data))]) {
 
@@ -39,13 +41,6 @@ check_visit_order <- function(df, Subj_ID, testdate, visit_num) {
         }
       }
 
-    }
-  }
-
-  for (subject_id in unique(df[[Subj_ID]])) {
-    subject_data <- df[df[[Subj_ID]] == subject_id, ]
-
-    for (i in 1:nrow(subject_data)) {
       if (subject_data[[visit_num]][i] %in% subject_data[[visit_num]][c(1:(i-1), (i+1):nrow(subject_data))]) {
 
         if (!subject_data[[testdate]][i] %in% subject_data[[testdate]][c(1:(i-1), (i+1):nrow(subject_data))]) {
@@ -53,11 +48,17 @@ check_visit_order <- function(df, Subj_ID, testdate, visit_num) {
         }
       }
     }
-    for (n in 1:(nrow(subject_data)-1)) {
-      if (nrow(subject_data) >= 2 && subject_data[[visit_num]][n] > subject_data[[visit_num]][n+1]) {
-        subject_data[[visit_num]][n] = subject_data[[visit_num]][n+1] - 1
+    if (nrow(subject_data)>1){
+       for (n in 2:(nrow(subject_data))) {
+      if (subject_data[[testdate]][n] != subject_data[[testdate]][n-1]) {
+        if (subject_data[[visit_num]][n] != subject_data[[visit_num]][n-1]+1 ){
+          subject_data[[visit_num]][n] = subject_data[[visit_num]][n-1] + 1
+          df[[visit_num]][which(df[[Subj_ID]] == subject_id & df[[testdate]] == subject_data[[testdate]][n] )] <- subject_data[[visit_num]][n-1] + 1
+        }
       }
     }
+    }
+
     full_sequence <- seq(min(subject_data[[visit_num]]), max(subject_data[[visit_num]]))
 
     missing_nums <- setdiff(full_sequence, subject_data[[visit_num]])
