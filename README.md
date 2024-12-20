@@ -17,7 +17,8 @@ correctly ordered chronologically
 You can install the development version of tjspack like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+library(devtools)
+install_github("tylerserm/tjspack")
 ```
 
 ## Example
@@ -28,4 +29,14 @@ third visit
 
 ``` r
 library(tjspack)
+
+example1 <- data.frame(
+ID = c(1, 1, 1, 2, 2),
+TestDate = as.Date(c("2023-01-01", "2023-01-01", "2023-04-01", "2023-02-01", "2023-02-01")),
+DOB = as.Date(c("2017-06-01", "2017-06-01", "2017-06-01", "2017-12-14", "2017-12-14")),
+Age = c(5.58, 5.58, 8.83, 5.05, 5.05))
+
+check_age(example, "ID", "TestDate", "DOB", "Age")
+
+example1
 ```
