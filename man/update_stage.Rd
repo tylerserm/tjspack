@@ -9,13 +9,13 @@ update_stage(df, Subj_ID, visit_num, Case_Status, Test_Type)
 \arguments{
 \item{df}{the dataframe you would like applied to this function}
 
-\item{Subj_ID}{the patients identifying number}
+\item{Subj_ID}{the column name where patients identifying numbers are stored}
 
-\item{visit_num}{the visit number, the record of which instance the patient was seen}
+\item{visit_num}{the column the visit number, the record of which instance the patient was seen, is stored}
 
-\item{Case_Status}{the category of your case investigation, typically inital or confirmatory}
+\item{Case_Status}{the column where the category of your case investigation, typically inital or confirmatory, is stored}
 
-\item{Test_Type}{the source of your sample, for example the collection method used}
+\item{Test_Type}{the column where the source of your sample, for example the collection method used, is stored}
 }
 \value{
 The entered dataframe now with any incorrectly entered case statuses information fixed based on testing results

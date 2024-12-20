@@ -9,11 +9,11 @@ check_visit_order(df, Subj_ID, testdate, visit_num)
 \arguments{
 \item{df}{the dataframe you would like applied to this function}
 
-\item{Subj_ID}{the patients identifying number}
+\item{Subj_ID}{the column name where patients identifying numbers are stored}
 
-\item{testdate}{the date the sample was collected}
+\item{testdate}{the column name where the date the sample was collected is stored}
 
-\item{visit_num}{the visit number, the record of which instance the patient was seen}
+\item{visit_num}{the column the visit number, the record of which instance the patient was seen, is stored}
 }
 \value{
 The entered dataframe now with any incorrectly entered visit order number information fixed

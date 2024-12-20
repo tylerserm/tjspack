@@ -3,10 +3,10 @@
 #' @description This function is specific to case management of elevated blood lead patients and how samples are automatically coded as confirmatory if they are venous blood draws even if they are an initial test result.
 #'
 #' @param df the dataframe you would like applied to this function
-#' @param Subj_ID the patients identifying number
-#' @param visit_num the visit number, the record of which instance the patient was seen
-#' @param Case_Status the category of your case investigation, typically inital or confirmatory
-#' @param Test_Type the source of your sample, for example the collection method used
+#' @param Subj_ID the column name where patients identifying numbers are stored
+#' @param visit_num the column the visit number, the record of which instance the patient was seen, is stored
+#' @param Case_Status the column where the category of your case investigation, typically inital or confirmatory, is stored
+#' @param Test_Type the column where the source of your sample, for example the collection method used, is stored
 #'
 #' @returns The entered dataframe now with any incorrectly entered case statuses information fixed based on testing results
 #' @export

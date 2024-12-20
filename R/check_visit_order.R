@@ -3,9 +3,9 @@
 #' @description This function checks to ensure a subject's visit order number is correct over longitudinal data. It will also correct any incorrect entries.
 #'
 #' @param df the dataframe you would like applied to this function
-#' @param Subj_ID the patients identifying number
-#' @param testdate the date the sample was collected
-#' @param visit_num the visit number, the record of which instance the patient was seen
+#' @param Subj_ID the column name where patients identifying numbers are stored
+#' @param testdate the column name where the date the sample was collected is stored
+#' @param visit_num the column the visit number, the record of which instance the patient was seen, is stored
 #'
 #' @returns The entered dataframe now with any incorrectly entered visit order number information fixed
 #' @export

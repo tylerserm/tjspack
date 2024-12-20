@@ -3,10 +3,10 @@
 #' @description This function checks to ensure a subject's age is consistent over longitudinal data. It will also correct any incorrect ages.
 #'
 #' @param df the dataframe you would like applied to this function
-#' @param Subj_ID the patients identifying number
-#' @param testdate the date the sample was collected
-#' @param DOB the patients date of birth
-#' @param Age the patients age
+#' @param Subj_ID the column name where patients identifying numbers are stored
+#' @param testdate the column name where the date the sample was collected is stored
+#' @param DOB the column name where the patient's date of birth is stored
+#' @param Age the column where the patient's age is stored
 #'
 #' @returns The entered dataframe now with any incorrectly entered ages fixed
 #' @export
@@ -18,7 +18,7 @@
 #' ID = c(1, 1, 1, 2, 2),
 #' TestDate = as.Date(c("2023-01-01", "2023-01-01", "2023-04-01", "2023-02-01", "2023-02-01")),
 #' DOB = as.Date(c("2017-06-01", "2017-06-01", "2017-06-01", "2017-12-14", "2017-12-14")),
-#' Age = c(5.58, 5.58, 8.83, 5.05, 5.05)
+#' Age = c(5.58, 5.58, 8.83, 5.05, 5.05))
 #' check_age(example, "ID", "TestDate", "DOB", "Age")
 #' #Notice now, this incorrect age has been corrected
 #' example
