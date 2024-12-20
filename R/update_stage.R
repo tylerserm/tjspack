@@ -30,5 +30,3 @@ update_stage <- function(df, Subj_ID, visit_num, Case_Status, Test_Type) {
   return(df)
 }
 
-df <- update_stage(df)
-
