@@ -1,13 +1,11 @@
 library(shiny)
-library(readr)
-library(dplyr)
-library(tools)
 
 check_age <- function(df, Subj_ID, testdate, DOB, Age) {
   df[[testdate]] <- as.Date(df[[testdate]], format = "%m/%d/%Y")
   df[[DOB]] <- as.Date(df[[DOB]], format = "%m/%d/%Y")
 
   df$calculated_age <- round(as.numeric(difftime(df[[testdate]], df[[DOB]], units = "weeks")) / 52.25, 2)
+
   df$age_check <- abs(df$calculated_age - df[[Age]]) < 0.01
 
   for (i in which(df$age_check == FALSE)) {
@@ -15,24 +13,28 @@ check_age <- function(df, Subj_ID, testdate, DOB, Age) {
 
     if (nrow(correct_rows) > 0) {
       df[[DOB]][i] <- correct_rows[[DOB]][1]
+
       df$calculated_age[i] <- as.numeric(difftime(df[[testdate]][i], df[[DOB]][i], units = "weeks")) / 52.25
       df[[Age]][i] <- round(df$calculated_age[i], 2)
       df$age_check[i] <- TRUE
     }
   }
-  df <- df[, !names(df) %in% c("age_check", "calculated_age")]
+  df <- df[, !names(df) %in% c("age_check","calculated_age")]
   return(df)
 }
 
+
 check_visit_order <- function(df, Subj_ID, testdate, visit_num) {
+  df[[testdate]] <- as.Date(df[[testdate]], format = "%m/%d/%Y")
   df <- df[order(df[[Subj_ID]], df[[testdate]]), ]
+
   for (subject_id in unique(df[[Subj_ID]])) {
     subject_data <- df[df[[Subj_ID]] == subject_id, ]
 
     for (i in 1:nrow(subject_data)) {
-      if(i == 1 && subject_data[[visit_num]][i] != 1){
-        df[[visit_num]][which(rownames(df) == rownames(subject_data)[i])] = 1
-        subject_data[[visit_num]][i] = 1
+      if (subject_data[[testdate]][i] == subject_data[[testdate]][1]){
+        df[[visit_num]][which(df[[Subj_ID]] == subject_id & df[[testdate]] == subject_data[[testdate]][i] )] <- 1
+        subject_data[[visit_num]][i] <- 1
       }
       if (subject_data[[visit_num]][i] %in% subject_data[[visit_num]][c(1:(i-1), (i+1):nrow(subject_data))]) {
 
@@ -43,13 +45,6 @@ check_visit_order <- function(df, Subj_ID, testdate, visit_num) {
         }
       }
 
-    }
-  }
-
-  for (subject_id in unique(df[[Subj_ID]])) {
-    subject_data <- df[df[[Subj_ID]] == subject_id, ]
-
-    for (i in 1:nrow(subject_data)) {
       if (subject_data[[visit_num]][i] %in% subject_data[[visit_num]][c(1:(i-1), (i+1):nrow(subject_data))]) {
 
         if (!subject_data[[testdate]][i] %in% subject_data[[testdate]][c(1:(i-1), (i+1):nrow(subject_data))]) {
@@ -57,11 +52,17 @@ check_visit_order <- function(df, Subj_ID, testdate, visit_num) {
         }
       }
     }
-    for (n in 1:(nrow(subject_data)-1)) {
-      if (nrow(subject_data) >= 2 && subject_data[[visit_num]][n] > subject_data[[visit_num]][n+1]) {
-        subject_data[[visit_num]][n] = subject_data[[visit_num]][n+1] - 1
+    if (nrow(subject_data)>1){
+      for (n in 2:(nrow(subject_data))) {
+        if (subject_data[[testdate]][n] != subject_data[[testdate]][n-1]) {
+          if (subject_data[[visit_num]][n] != subject_data[[visit_num]][n-1]+1 ){
+            subject_data[[visit_num]][n] = subject_data[[visit_num]][n-1] + 1
+            df[[visit_num]][which(df[[Subj_ID]] == subject_id & df[[testdate]] == subject_data[[testdate]][n] )] <- subject_data[[visit_num]][n-1] + 1
+          }
+        }
       }
     }
+
     full_sequence <- seq(min(subject_data[[visit_num]]), max(subject_data[[visit_num]]))
 
     missing_nums <- setdiff(full_sequence, subject_data[[visit_num]])
@@ -88,6 +89,9 @@ update_stage <- function(df, Subj_ID, visit_num, Case_Status, Test_Type) {
 
   return(df)
 }
+
+
+
 
 ui <- fluidPage(
   titlePanel("Update Data Functions"),
@@ -183,6 +187,16 @@ server <- function(input, output, session) {
     updated_df(df)
 
     output$table <- renderTable({
+      req(updated_df())
+
+      df <- updated_df()
+
+      if (testdate %in% names(df)) {
+        df[[testdate]] <- format(as.Date(df[[testdate]]), "%m/%d/%Y")
+      }
+      if (DOB %in% names(df)) {
+        df[[DOB]] <- format(as.Date(df[[DOB]]), "%m/%d/%Y")
+      }
       df
     })
   })
